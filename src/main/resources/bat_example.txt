@@ -1,0 +1,26 @@
+@echo off
+
+set "jar_path=C:\local\repos\jenkins-pipeline-ibcore-resources\java\GrafanaExporter-0.3.jar"
+set "cfg_path=C:\local\tasks\grafana_exporter\configs\ib"
+set configs=ib-core-lt-utilization.xml ib-core-lt-procstats.xml ib-core-lt-prometheus.xml ib-core-lt-tdg-prometheus.xml ib-core-lt-logs.xml ib-core-lt-lre_2.xml ib-core-lt-nginx.xml ib-core-lt-nginx-utilization.xml
+set "store_path=C:\local\tasks\grafana_exporter\grf\ib"
+set "task=TRNCOR-4856"
+set "test=2024-02-21"
+set "prefix=2_"
+
+set "dest=%store_path%\%task%\%test%"
+set "_start=2024-02-21T19:30:00"
+set "_end=2024-02-21T22:50:00"
+
+:_start
+
+if not exist %dest% mkdir -p %dest%
+for %%c in (%configs%) do (
+echo %%c
+set "_cmd=java -jar %jar_path% -c %cfg_path%\%%c -f %_start% -t %_end% -d %dest% -p %prefix%"
+echo %_cmd%
+%_cmd%
+
+)
+
+:_exit
